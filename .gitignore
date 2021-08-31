@@ -1,0 +1,6 @@
+.idea
+.vscode
+*.SAFE
+*.tiff
+*.py
+test*
