@@ -60,7 +60,7 @@ func main() {
 	t1 = time.Now()
 	fmt.Print("Сохраняем GEOTiff - ")
 
-	new, err := godal.Create(godal.GTiff, "test1.tiff", 1, godal.Int32, red_structure.SizeX, red_structure.SizeY, godal.CreationOption("COMPRESS=LZW", "TILED=YES"))
+	new, err := godal.Create(godal.GTiff, "test1.tiff", 1, godal.Int32, red_structure.SizeX, red_structure.SizeY, godal.CreationOption("COMPRESS=DEFLATE", "TILED=YES"))
 	gt, _ := ds_red.GeoTransform()
 	new.SetGeoTransform(gt)
 	new.Write(0, 0, ndvi, red_structure.SizeX, red_structure.SizeY)
