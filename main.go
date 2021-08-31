@@ -63,6 +63,7 @@ func main() {
 	new, err := godal.Create(godal.GTiff, "test1.tiff", 1, godal.Int32, red_structure.SizeX, red_structure.SizeY, godal.CreationOption("COMPRESS=DEFLATE", "TILED=YES"))
 	gt, _ := ds_red.GeoTransform()
 	new.SetGeoTransform(gt)
+	new.SetProjection(ds_red.Projection())
 	new.Write(0, 0, ndvi, red_structure.SizeX, red_structure.SizeY)
 	new.Close()
 	fmt.Println(time.Since(t1))
