@@ -4,5 +4,5 @@
 *.tiff
 *.py
 test*
-*.jp2
+# *.jp2
 .DS_Store
