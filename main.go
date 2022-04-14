@@ -10,10 +10,9 @@ import (
 func main() {
 	t := time.Now()
 	t1 := t
-	// redfile := "/data/Projects/Go/test/S2A_MSIL2A_20190531T081611_N0212_R121_T37TEM_20190531T112906.SAFE/GRANULE/L2A_T37TEM_A020567_20190531T081627/IMG_DATA/R10m/T37TEM_20190531T081611_B08_10m.jp2"
-	// nirfile := "/data/Projects/Go/test/S2A_MSIL2A_20190531T081611_N0212_R121_T37TEM_20190531T112906.SAFE/GRANULE/L2A_T37TEM_A020567_20190531T081627/IMG_DATA/R10m/T37TEM_20190531T081611_B04_10m.jp2"
-	redfile := "T37TEM_20190531T081611_B08_10m.jp2"
-	nirfile := "T37TEM_20190531T081611_B04_10m.jp2"
+
+	redfile := "sentinel_example_data/T37UDU_20171111T085159_B08_10m.jp2"
+	nirfile := "sentinel_example_data/T37UDU_20171111T085159_B04_10m.jp2"
 
 	godal.RegisterAll()
 	ds_red, err := godal.Open(redfile)
@@ -21,9 +20,8 @@ func main() {
 		panic(err)
 	}
 	defer ds_red.Close()
-	fmt.Print("Открываем красный - ")
+	fmt.Print("Open red channel - ")
 	red_structure := ds_red.Structure()
-	// fmt.Printf("Size is %dx%dx%d\n", red_structure.SizeX, red_structure.SizeY, red_structure.NBands)
 	red_band := ds_red.Bands()[0]
 	red_pafScanline := make([]float32, red_structure.SizeX*red_structure.SizeY)
 	err = red_band.Read(0, 0, red_pafScanline, red_structure.SizeX, red_structure.SizeY)
@@ -33,14 +31,14 @@ func main() {
 	fmt.Println(time.Since(t1))
 	t1 = time.Now()
 
-	fmt.Print("Открываем инфракрасный - ")
+	fmt.Print("Open infrared channel - ")
 	ds_nir, err := godal.Open(nirfile)
 	if err != nil {
 		panic(err)
 	}
 	defer ds_nir.Close()
+
 	nir_structure := ds_nir.Structure()
-	// fmt.Printf("Size is %dx%dx%d\n", nir_structure.SizeX, nir_structure.SizeY, nir_structure.NBands)
 	nir_band := ds_nir.Bands()[0]
 
 	nir_pafScanline := make([]float32, nir_structure.SizeX*nir_structure.SizeY)
@@ -58,7 +56,7 @@ func main() {
 	}
 	fmt.Println(time.Since(t1))
 	t1 = time.Now()
-	fmt.Print("Сохраняем GEOTiff - ")
+	fmt.Print("Saving GEOTiff - ")
 
 	new, err := godal.Create(godal.GTiff, "test1.tiff", 1, godal.Int32, red_structure.SizeX, red_structure.SizeY, godal.CreationOption("COMPRESS=DEFLATE", "TILED=YES"))
 	gt, _ := ds_red.GeoTransform()
@@ -68,6 +66,6 @@ func main() {
 	new.Close()
 	fmt.Println(time.Since(t1))
 
-	fmt.Println("Обсчет NDVI занял ", time.Since(t))
+	fmt.Println("NDVI calculated in ", time.Since(t))
 
 }

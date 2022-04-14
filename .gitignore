@@ -5,3 +5,4 @@
 *.py
 test*
 *.jp2
+.DS_Store
